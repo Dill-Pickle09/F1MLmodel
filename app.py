@@ -35,12 +35,12 @@ grid_position = st.slider("Grid Position (Starting Position)", 1, 20, 10)
 
 st.divider()
 
-if st.button("Predict FInishing Position", use_container_with=True):
+if st.button("Predict Finishing Position"):
 
     chosen_driver = driver_options[driver_name]
     chosen_constructor = constructor_options[constructor_name]
 
-    input_data = pd.DataFram([{
+    input_data = pd.DataFrame([{
         "driverId": chosen_driver,
         "constructorId": chosen_constructor,
         "grid": grid_position
