@@ -7,12 +7,15 @@ xgb_model = joblib.load("models/xgb_model.pkl")
 
 drivers_df = pd.read_csv("data/drivers.csv")
 constructors_df = pd.read_csv("data/constructors.csv")
+train_data = pd.read_csv("data/training_data.csv")
+
 
 driver_options = dict(zip(drivers_df["surname"], drivers_df['driverId']))
 constructor_options = dict(zip(constructors_df["name"], constructors_df["constructorId"]))
 
-st.set_page_config(page_title="F1 Race Position Predictor", layout="centered")
 
+
+st.set_page_config(page_title="F1 Race Position Predictor", layout="centered")
 st.title("F1 Race Position Predictor!")
 st.markdown(
     """
@@ -41,7 +44,9 @@ if st.button("Predict Finishing Position"):
 
     model = rf_model if model_choice == "Random Forest" else xgb_model
 
-    input_dict = {feat:0 for feat in model.feature_names_in_}
+    model_features = model.feature_names_in
+    feature_means = train_data[model_features].mean().to_dict()
+    input_dict = feature_means.copy()
 
     input_data = pd.DataFrame([{
         "driverId": chosen_driver,
