@@ -21,7 +21,7 @@ feature_means = {
     'grid_diff_teammate': 1,
     'finish_diff_teammate': 1,
     'points_diff_teammate': 0,
-    'driver_circuit_avg_finish': 0
+    'driver_circuit_avg_finish': 10
     
 }
 
@@ -43,23 +43,28 @@ model_choice = st.selectbox(
 driver_name = st.selectbox("Driver:", list(driver_options.keys()))
 constructor_name = st.selectbox("Constructor:", list(constructor_options.keys()))
 grid_position = st.slider("Grid Position (Starting Position)", 1, 20, 10)
+year = st.number_input("Year", 2000, 2025, 2020)
+round_ = st.slider("Round", 1 ,23, 1)
 
 st.divider()
 
 if st.button("Predict Finishing Position"):
-
-    chosen_driver = driver_options[driver_name]
-    chosen_constructor = constructor_options[constructor_name]
-
+    
     model = rf_model if model_choice == "Random Forest" else xgb_model
 
 
     input_dict = feature_means.copy()
+
+
     input_dict.update({
-        "driverId": chosen_driver,
-        "constructorId": chosen_constructor,
-        "grid": grid_position
+        "grid": grid_position,
+        "year": year,
+        "round": round_
     })
+
+    for feat in model.feature_names_in_:
+        if feat not in input_dict:
+            input_dict[feat] = 0
 
     input_data = pd.DataFrame([input_dict])[model.feature_names_in_]
 
