@@ -43,11 +43,11 @@ if st.button("Predict Finishing Position"):
 
     input_dict = {feat:0 for feat in model.feature_names_in_}
 
-    input_data = pd.DataFrame({
+    input_data = pd.DataFrame([{
         "driverId": chosen_driver,
         "constructorId": chosen_constructor,
         "grid": grid_position
-    })
+    }])
 
     input_data = pd.DataFrame([input_dict])
 
