@@ -7,13 +7,23 @@ xgb_model = joblib.load("models/xgb_model.pkl")
 
 drivers_df = pd.read_csv("data/drivers.csv")
 constructors_df = pd.read_csv("data/constructors.csv")
-train_data = pd.read_csv("data/training_data.csv")
 
 
 driver_options = dict(zip(drivers_df["surname"], drivers_df['driverId']))
 constructor_options = dict(zip(constructors_df["name"], constructors_df["constructorId"]))
 
-
+feature_means = {
+    'year':2020,
+    'round':1,
+    'grid': 10,
+    'driver_avg_finish_last_5': 10,
+    'driver_points_last_5': 5,
+    'grid_diff_teammate': 1,
+    'finish_diff_teammate': 1,
+    'points_diff_teammate': 0,
+    'driver_circuit_avg_finish': 0
+    
+}
 
 st.set_page_config(page_title="F1 Race Position Predictor", layout="centered")
 st.title("F1 Race Position Predictor!")
@@ -30,7 +40,6 @@ model_choice = st.selectbox(
     "Choose ML Model:",
     ["Random Forest", "XGBoost"]
 )
-
 driver_name = st.selectbox("Driver:", list(driver_options.keys()))
 constructor_name = st.selectbox("Constructor:", list(constructor_options.keys()))
 grid_position = st.slider("Grid Position (Starting Position)", 1, 20, 10)
@@ -44,17 +53,15 @@ if st.button("Predict Finishing Position"):
 
     model = rf_model if model_choice == "Random Forest" else xgb_model
 
-    model_features = model.feature_names_in
-    feature_means = train_data[model_features].mean().to_dict()
-    input_dict = feature_means.copy()
 
-    input_data = pd.DataFrame([{
+    input_dict = feature_means.copy()
+    input_dict.update({
         "driverId": chosen_driver,
         "constructorId": chosen_constructor,
         "grid": grid_position
-    }])
+    })
 
-    input_data = pd.DataFrame([input_dict])
+    input_data = pd.DataFrame([input_dict])[model.feature_names_in_]
 
     prediction = model.predict(input_data)[0]
 
