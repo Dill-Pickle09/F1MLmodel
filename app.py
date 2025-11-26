@@ -30,7 +30,6 @@ model_choice = st.selectbox(
 
 driver_name = st.selectbox("Driver:", list(driver_options.keys()))
 constructor_name = st.selectbox("Constructor:", list(constructor_options.keys()))
-
 grid_position = st.slider("Grid Position (Starting Position)", 1, 20, 10)
 
 st.divider()
@@ -40,13 +39,17 @@ if st.button("Predict Finishing Position"):
     chosen_driver = driver_options[driver_name]
     chosen_constructor = constructor_options[constructor_name]
 
-    input_data = pd.DataFrame([{
+    model = rf_model if model_choice == "Random Forest" else xgb_model
+
+    input_dict = {feat:0 for feat in model.feature_names_in_}
+
+    input_data = pd.DataFrame({
         "driverId": chosen_driver,
         "constructorId": chosen_constructor,
         "grid": grid_position
-    }])
+    })
 
-    model = rf_model if model_choice == "Random Forest" else xgb_model
+    input_data = pd.DataFrame([input_dict])
 
     prediction = model.predict(input_data)[0]
 
