@@ -93,7 +93,7 @@ if st.button("Predict Finishing Position"):
 
     prediction = model.predict(input_data)[0]
 
-    st.success(f"Predicted finishing position: *{prediction: .2f}**")
+    st.success(f"Predicted finishing position: **{prediction: .2f}**")
 
     if prediction < grid_position:
         st.markdown("The driver is predicted to **gain poisitions** during the race")
