@@ -140,7 +140,7 @@ if st.button("Predict"):
     else:
         st.markdown("Model predicts the driver will not gain or lose places")
 
-    with st.expander("Show computed features"):
-        st.json(feat_dict)
-    
+    feat_dict_clean = {k: (int(v) if isinstance(v, (np.integer)) else float(v) if isinstance(v, (np.floating)) else v) for k,v in feat_dict.items()}
+    st.json(feat_dict_clean)
+
     st.divider
