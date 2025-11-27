@@ -55,12 +55,13 @@ def compute_features_for_case(driver_id, constructor_id, year, round_, grid):
     if not df_last_race.empty:
         teammate = df_last_race.sort_values(["year","round"], ascending=False).iloc[0]
         grid_diff_teammate = grid - teammate["grid"]
-        finish_diff_teammate = 0
-        points_diff_teammate = 0
+        finish_diff_teammate = 0 if pd.isna(teammate["positionOrder"]) else 0 - teammate["positionOrder"]  
+        points_diff_teammate = 0 if pd.isna(teammate["points"]) else 0 - teammate["points"]
     else:
         grid_diff_teammate = 0
         finish_diff_teammate = 0
         points_diff_teammate = 0
+
 
     current_race = df_races[(df_races["year"] == year) & (df_races["round"] == round_)]
     if not current_race.empty:
