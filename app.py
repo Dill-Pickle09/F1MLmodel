@@ -32,7 +32,7 @@ constructor_options = dict(zip(df_constructors["name"], df_constructors['constru
 
 st.set_page_config(page_title="F1 Race Result Predictor", layout="centered")
 st.title("F1 Race Finishing Position Predictor")
-st.markdown("Select a driver, constructor, starting grid slot, year, and round below.")
+st.markdown("Select a driver, constructor, starting grid slot, year, and round below. Please note that results may not always be accurate.")
 
 driver_name = st.selectbox("Driver", list(driver_options.keys()))
 constructor_name = st.selectbox("Constructor", list(constructor_options.keys()))
